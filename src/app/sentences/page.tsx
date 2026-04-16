@@ -8,14 +8,24 @@ export default function SentencesPage() {
   const [sentences, setSentences] = useState<any[]>([]);
 
   useEffect(() => {
-    // Mocking with localStorage or fallback to default
-    const mockSentences = [
-      { id: 1, original: "We need 500 pieces, what is the best price?", translated: "我们需要500件，最好的价格是多少？", createdAt: "2024-04-17" },
-      { id: 2, original: "Please let us know the delivery time.", translated: "请告知我们交货时间。", createdAt: "2024-04-16" },
-      { id: 3, original: "Can you provide a discount for bulk orders?", translated: "大宗订单可以提供折扣吗？", createdAt: "2024-04-15" },
-    ];
-    setSentences(mockSentences);
+    const saved = localStorage.getItem("saved_sentences");
+    if (saved) {
+      setSentences(JSON.parse(saved));
+    } else {
+      const mockSentences = [
+        { id: 1, original: "We need 500 pieces, what is the best price?", translated: "我们需要500件，最好的价格是多少？", createdAt: "2024-04-17" },
+        { id: 2, original: "Please let us know the delivery time.", translated: "请告知我们交货时间。", createdAt: "2024-04-16" },
+        { id: 3, original: "Can you provide a discount for bulk orders?", translated: "大宗订单可以提供折扣吗？", createdAt: "2024-04-15" },
+      ];
+      setSentences(mockSentences);
+    }
   }, []);
+
+  const handleDelete = (id: number) => {
+    const updated = sentences.filter(s => s.id !== id);
+    setSentences(updated);
+    localStorage.setItem("saved_sentences", JSON.stringify(updated));
+  };
 
   return (
     <div className="flex flex-col min-h-screen max-w-4xl mx-auto px-4 py-8">
@@ -44,7 +54,10 @@ export default function SentencesPage() {
                   <button className="p-2 text-gray-500 hover:text-white transition-colors rounded-lg bg-gray-800/50">
                     <Copy size={16} />
                   </button>
-                  <button className="p-2 text-gray-500 hover:text-red-500 transition-colors rounded-lg bg-gray-800/50">
+                  <button 
+                    onClick={() => handleDelete(item.id)}
+                    className="p-2 text-gray-500 hover:text-red-500 transition-colors rounded-lg bg-gray-800/50"
+                  >
                     <Trash2 size={16} />
                   </button>
                 </div>
