@@ -8,21 +8,23 @@ export default function WordsPage() {
   const [words, setWords] = useState<any[]>([]);
 
   useEffect(() => {
-    // In a real app, fetch from database. Mocking with localStorage.
     const saved = localStorage.getItem("saved_words");
-    if (saved) setWords(JSON.parse(saved));
-    else {
+    if (saved) {
+      setWords(JSON.parse(saved));
+    } else {
       const mockWords = [
-        { id: 1, text: "Inquiry", meaning: "询问，查问", phonetic: "/ɪnˈkwaɪəri/", createdAt: "2024-04-17" },
-        { id: 2, text: "Quotation", meaning: "报价单", phonetic: "/kwoʊˈteɪʃn/", createdAt: "2024-04-16" },
-        { id: 3, text: "Logistics", meaning: "物流", phonetic: "/ləˈdʒɪstɪks/", createdAt: "2024-04-15" },
+        { id: 1, word: "Inquiry", meaning: "询问，查问", phonetic: "/ɪnˈkwaɪəri/", createdAt: "2024-04-17" },
+        { id: 2, word: "Quotation", meaning: "报价单", phonetic: "/kwoʊˈteɪʃn/", createdAt: "2024-04-16" },
+        { id: 3, word: "Logistics", meaning: "物流", phonetic: "/ləˈdʒɪstɪks/", createdAt: "2024-04-15" },
       ];
       setWords(mockWords);
     }
   }, []);
 
   const handleDelete = (id: number) => {
-    setWords(words.filter(w => w.id !== id));
+    const updated = words.filter(w => w.id !== id);
+    setWords(updated);
+    localStorage.setItem("saved_words", JSON.stringify(updated));
   };
 
   return (
@@ -43,7 +45,7 @@ export default function WordsPage() {
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    {word.text}
+                    {word.word}
                     <Volume2 size={16} className="text-gray-500 cursor-pointer hover:text-white" />
                   </h3>
                   <p className="text-primary font-medium mt-1">{word.meaning}</p>
