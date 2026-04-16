@@ -39,11 +39,24 @@ export default function TranslationPage() {
   };
 
   const handleSaveWord = (word: any) => {
+    const saved = localStorage.getItem("saved_words");
+    const words = saved ? JSON.parse(saved) : [];
+    const newWord = { ...word, id: Date.now(), createdAt: new Date().toLocaleDateString() };
+    localStorage.setItem("saved_words", JSON.stringify([newWord, ...words]));
     alert(`已将 "${word.word}" 保存到单词本`);
   };
 
   const handleSaveSentence = () => {
     if (!inputText || !translatedText) return;
+    const saved = localStorage.getItem("saved_sentences");
+    const sentences = saved ? JSON.parse(saved) : [];
+    const newSentence = { 
+      id: Date.now(), 
+      original: inputText, 
+      translated: translatedText, 
+      createdAt: new Date().toLocaleDateString() 
+    };
+    localStorage.setItem("saved_sentences", JSON.stringify([newSentence, ...sentences]));
     alert("已保存到句子本");
   };
 
